@@ -35,16 +35,17 @@ pip install requests beautifulsoup4 lxml pyyaml
 ### Scrapping 
 3. You can run __scrap-spells.py__ to scrape the spell information from the website:
 ```
-python3 scrap-spells.py
+python scrapping/scrap-spells.py
 ```
-__The script should take a few minutes to scrap all spells__
+A progress bar should be displayed in your terminal indicating the time left and the number of spells scraped.
+__The script should takes about 20 minutes to scrap all spells__
 
 4. This command will generate a file __spells.yaml__ with all spells and their attributes
 
 ### Database
 5. You can build a __.db__ sqlite3 databse file by running the __spell_db.py__ file:
 ```
-python3 spell-db.py
+python database/spell-db.py
 ```
 
 6. The script will create a __spells.db__ file with a spell table containing all the spell information.

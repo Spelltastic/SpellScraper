@@ -4,6 +4,7 @@ import bs4
 from bs4 import BeautifulSoup
 from lxml import html
 import yaml
+from tqdm import tqdm
 
 ### -------------------------------------
 # GET ALL THE SPELLS FROM THE PAGE
@@ -42,9 +43,8 @@ def getStringSiblings(array, content, stop):
         return None
     return ' '.join(array)
 
-
-cpt = 0 
 spellz = {}
+pbar = tqdm(total=2650, desc="[Processing]", unit=" spell")
 
 for li in lis:
     url = li.a['href']
@@ -55,6 +55,7 @@ for li in lis:
 
     # get article content which contains all info about spells
     spellContent = spellSoup.find(id='article-content')
+    pbar.update(1)
 
 ###################
 ### ATTRIBUTES
@@ -66,7 +67,7 @@ for li in lis:
     else :
         spell_name = None
         continue
-    print("name: ",spell_name)
+    # print("name: ",spell_name)
 
     # get school and level
     school_levels = spellContent.find('b',string="School").find_previous('p')
@@ -75,63 +76,63 @@ for li in lis:
     spell_school = parts[0].replace("School","").strip().strip(";")
     spell_level = parts[1].replace("Level","").strip()
 
-    print("School: ",spell_school)
-    print("Level:",spell_level)
+    # print("School: ",spell_school)
+    # print("Level:",spell_level)
 
     # get casting time
     castTime = []
     spell_castTime = spellContent.find('b',string="Casting Time")
     spell_castTime = getStringSiblings(castTime, spell_castTime, 'b')
-    print("Cast time: ", spell_castTime)
+    # print("Cast time: ", spell_castTime)
 
     # get components 
     components = []
     spell_components = spellContent.find('b', string='Components')#.next_sibling.strip()
     spell_components = getStringSiblings(components, spell_components, 'p')
-    print ("Components: ", spell_components)
+    # print ("Components: ", spell_components)
 
     # get range
     rangesp = []
     spell_range = spellContent.find('b',string="Range")
     spell_range = getStringSiblings(rangesp, spell_range, 'b')
-    print("Range: ", spell_range)
+    # print("Range: ", spell_range)
 
     # get target
     target = []
     spell_target = spellContent.find('b',string="Target")
     spell_target = getStringSiblings(target, spell_target, 'b')
-    print("Target: ", spell_target)
+    # print("Target: ", spell_target)
 
     #get duration
     duration = []
     spell_duration = spellContent.find('b',string="Duration")
     spell_duration = getStringSiblings(duration, spell_duration, 'b')
-    print("Duration: ",spell_duration)
+    # print("Duration: ",spell_duration)
 
     
     # get saving throw
     svthrow = []
     spell_saving_throw = spellContent.find('b',string='Saving Throw')
     spell_saving_throw = getStringSiblings(svthrow, spell_saving_throw, 'b')
-    print("Saving throw: ", spell_saving_throw)
+    # print("Saving throw: ", spell_saving_throw)
 
     # get resistance
     resistance = []
     spell_resistance = spellContent.find('b',string='Spell Resistance')
     spell_resistance = getStringSiblings(resistance, spell_resistance, 'b')
-    print("Spell Resistance: ", spell_resistance)
+    # print("Spell Resistance: ", spell_resistance)
 
     # get area
     area = []
     spell_area = spellContent.find('b',string='Area')
     spell_area = getStringSiblings(area, spell_area, 'b')
-    print("Area:", spell_area )
+    # print("Area:", spell_area )
 
     # get effect
     effect = []
     spell_effect = spellContent.find('b',string='Effect')
     spell_effect = getStringSiblings(effect, spell_effect, 'b')
-    print('Effect: ',spell_effect)
+    # print('Effect: ',spell_effect)
 
     # get description 
     spell_paragraphs = []
@@ -153,7 +154,7 @@ for li in lis:
             break
 
 
-    print("Spell description:\n", '\n\n'.join(spell_paragraphs))
+    # print("Spell description:\n", '\n\n'.join(spell_paragraphs))
     
     # print(" ----- ")
     # print(" ")
@@ -177,6 +178,7 @@ for li in lis:
 with open('outputs/spells.yaml', 'w') as f:
     yaml.dump(spellz, f)
 
+pbar.close()
 
     
 

@@ -1,5 +1,8 @@
 # Spell Scrapper :scroll: :snake:
 
+## About this repository
+This repository was built in order to have an "up to date" spells database for [SpellTastic](https://codefirst.iut.uca.fr/git/Spelltastic/Spelltastic), a cross-platform spell manager for Patfinder.
+
 ## Data source
 All data is retrieved from [d20pfsrd](https://www.d20pfsrd.com/) the __#1 Pathfinder Roleplaying Game rules reference site__. All spells can be found at [spells](https://www.d20pfsrd.com/magic/all-spells/).
 

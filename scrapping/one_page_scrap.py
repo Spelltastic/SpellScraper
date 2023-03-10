@@ -9,11 +9,27 @@ import bs4
 from bs4 import BeautifulSoup
 from lxml import html
 
-URL = "https://www.d20pfsrd.com/magic/all-spells/a/accelerate-poison/"
+URL = "https://www.d20pfsrd.com/magic/all-spells/a/ant-haul/"
 
 responseDetails = requests.get(URL)
 spellSoup = BeautifulSoup(responseDetails.content, 'lxml')
 spellContent = spellSoup.find(id='article-content')
+
+def parseLevelAndGetClass(spell_level):
+    class_dict = {}
+    for class_level in spell_level.split(","):
+        class_level = class_level.strip()
+        if " " in class_level:
+            class_name, level = class_level.rsplit(maxsplit=1)
+            if "/" in class_name:
+                class_names = class_name.split("/")
+                for name in class_names:
+                    class_dict[name.strip()] = level.strip()
+            else:
+                class_dict[class_name.strip()] = level.strip()
+        else:
+            class_dict[class_level.strip()] = "1"
+    return class_dict
 
 ###################
 ### LEVELS
@@ -26,6 +42,9 @@ spell_level = parts[1].replace("Level","").strip().split(";")[0]
 
 print("level: ", spell_level)
 print("school: ", spell_school)
+
+class_levels = parseLevelAndGetClass(spell_level)
+print(class_levels)
 
 ###################
 ### DESCRIPTION

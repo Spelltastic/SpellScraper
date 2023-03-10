@@ -28,6 +28,22 @@ lis = list.find_all('li')
 ###################
 ### METHODS
 ###################
+def parseLevelAndGetClass(spell_level):
+    class_dict = {}
+    for class_level in spell_level.split(","):
+        class_level = class_level.strip()
+        if " " in class_level:
+            class_name, level = class_level.rsplit(maxsplit=1)
+            if "/" in class_name:
+                class_names = class_name.split("/")
+                for name in class_names:
+                    class_dict[name.strip()] = level.strip()
+            else:
+                class_dict[class_name.strip()] = level.strip()
+        else:
+            class_dict[class_level.strip()] = "1"
+    return class_dict
+
 def getStringSiblings(array, content, stop):
     if content:
         for sibling in content.next_siblings:
@@ -75,6 +91,8 @@ for li in lis:
     parts = text.split("Level")
     spell_school = parts[0].replace("School","").strip().strip(";")
     spell_level = parts[1].replace("Level","").strip()
+
+    spell_class_and_level = parseLevelAndGetClass(spell_level)
 
     # print("School: ",spell_school)
     # print("Level:",spell_level)
@@ -162,7 +180,7 @@ for li in lis:
     # print("no: ",cpt)
     spellz[spell_name] = {
         'school': spell_school,
-        'level': spell_level,
+        'level': spell_class_and_level,
         'casting_time': spell_castTime,
         'components': spell_components,
         'range': spell_range,
@@ -174,6 +192,7 @@ for li in lis:
         'effect': spell_effect,
         'description': spell_paragraphs
     }
+    break
 
 with open('outputs/spells.yaml', 'w') as f:
     yaml.dump(spellz, f)

@@ -90,7 +90,7 @@ for li in lis:
     text = school_levels.text
     parts = text.split("Level")
     spell_school = parts[0].replace("School","").strip().strip(";")
-    spell_level = parts[1].replace("Level","").strip()
+    spell_level = parts[1].replace("Level","").strip().split(";")[0]
 
     spell_class_and_level = parseLevelAndGetClass(spell_level)
 
@@ -192,7 +192,6 @@ for li in lis:
         'effect': spell_effect,
         'description': spell_paragraphs
     }
-    break
 
 with open('outputs/spells.yaml', 'w') as f:
     yaml.dump(spellz, f)

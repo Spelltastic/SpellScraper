@@ -2,7 +2,7 @@ import yaml
 import sqlite3
 
 def createDatabase():
-    connexion = sqlite3.connect('database/spells.db')
+    connexion = sqlite3.connect('outputs/spells.db')
     cursor = connexion.cursor()
 
     cursor.execute('''DROP TABLE IF EXISTS spell''')
@@ -29,7 +29,7 @@ def insertSpells():
     with open('outputs/spells.yaml', 'r') as file:
         spells = yaml.safe_load(file)
 
-    connexion = sqlite3.connect('assets/spells.db')
+    connexion = sqlite3.connect('outputs/spells.db')
     cursor = connexion.cursor()
     
     for name, spell in spells.items():

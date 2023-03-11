@@ -11,39 +11,23 @@ from tqdm import tqdm
 ### -------------------------------------
 
 ## GET <li> ELEMENTS NAME + URL TO DETAIL PAGE
-# url with all spells
+# set url for page with all spells
 URL = "https://www.d20pfsrd.com/magic/all-spells/"
 
-# get the page content using GET to url
+# get the page content 
 response = requests.get(URL)
 
-# parse html using
+# parse html using beautifulSoup
 soup = BeautifulSoup(response.content, 'lxml')
 list = soup.find(id='article-content').find_next('div',class_="flexbox")
 
-# this gets all the <li> elements from the article-content div, which contain all of the 
+# this gets all the <li> elements from the article-content div, which contains all of the 
 # spells (name and link to detail page)
 lis = list.find_all('li')
 
 ###################
 ### METHODS
 ###################
-def parseLevelAndGetClass(spell_level):
-    class_dict = {}
-    for class_level in spell_level.split(","):
-        class_level = class_level.strip()
-        if " " in class_level:
-            class_name, level = class_level.rsplit(maxsplit=1)
-            if "/" in class_name:
-                class_names = class_name.split("/")
-                for name in class_names:
-                    class_dict[name.strip()] = level.strip()
-            else:
-                class_dict[class_name.strip()] = level.strip()
-        else:
-            class_dict[class_level.strip()] = "1"
-    return class_dict
-
 def getStringSiblings(array, content, stop):
     if content:
         for sibling in content.next_siblings:
@@ -62,14 +46,14 @@ def getStringSiblings(array, content, stop):
 spellz = {}
 pbar = tqdm(total=2650, desc="[Processing]", unit=" spell")
 
-for li in lis:
+for li in lis: # now we loop over all spells, get the page link and scrap all attributes
     url = li.a['href']
 
     ## get html of details page
     responseDetails = requests.get(url)
     spellSoup = BeautifulSoup(responseDetails.content, 'lxml')
 
-    # get article content which contains all info about spells
+    # get article content which contains all info about the spell
     spellContent = spellSoup.find(id='article-content')
     pbar.update(1)
 
@@ -91,8 +75,6 @@ for li in lis:
     parts = text.split("Level")
     spell_school = parts[0].replace("School","").strip().strip(";")
     spell_level = parts[1].replace("Level","").strip().split(";")[0]
-
-    spell_class_and_level = parseLevelAndGetClass(spell_level)
 
     # print("School: ",spell_school)
     # print("Level:",spell_level)
@@ -171,16 +153,10 @@ for li in lis:
         if spell_description and spell_description.parent.name == 'div':
             break
 
-
-    # print("Spell description:\n", '\n\n'.join(spell_paragraphs))
-    
-    # print(" ----- ")
-    # print(" ")
-    # cpt += 1
-    # print("no: ",cpt)
+    # add all attributes to a spell dictionnary
     spellz[spell_name] = {
         'school': spell_school,
-        'level': spell_class_and_level,
+        'level': spell_level,
         'casting_time': spell_castTime,
         'components': spell_components,
         'range': spell_range,
@@ -196,7 +172,7 @@ for li in lis:
 with open('outputs/spells.yaml', 'w') as f:
     yaml.dump(spellz, f)
 
-pbar.close()
+pbar.close() 
 
     
 

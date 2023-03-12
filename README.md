@@ -1,12 +1,12 @@
 # Spell Scrapper :scroll: :snake:
 
 ## About this repository
-This repository was built in order to have an "up to date" spells database for [SpellTastic](https://codefirst.iut.uca.fr/git/Spelltastic/Spelltastic), a cross-platform spell manager for Patfinder.
+This repository was built in order to have an "up to date" spells database for [SpellTastic](https://codefirst.iut.uca.fr/git/Spelltastic/Spelltastic), a cross-platform spell manager for Pathfinder.
 
 ## Data source
 All data is retrieved from [d20pfsrd](https://www.d20pfsrd.com/) the __#1 Pathfinder Roleplaying Game rules reference site__. All spells can be found at [spells](https://www.d20pfsrd.com/magic/all-spells/).
 
-The latest data extracted is available as a YAML file.
+The latest data extracted is available as a YAML file and can be found in the `outputs` directory.
 
 ## Getting Started
 
@@ -37,10 +37,9 @@ pip install requests beautifulsoup4 lxml pyyaml
 ```
 python scrapping/scrap-spells.py
 ```
-A progress bar should be displayed in your terminal indicating the time left and the number of spells scraped.
-__The script should takes about 20 minutes to scrap all spells__
 
-4. This command will generate a file __spells.yaml__ with all spells and their attributes
+4. This command will generate a file __spells.yaml__ with all spells and their attributes. The file should be found in the `outputs` directory. 
+_A progress bar should be displayed in your terminal while scrapping, showing the time left and the number of spells scraped. The script should takes about 20 minutes to scrap all spells._
 
 ### Database
 5. You can build a __.db__ sqlite3 databse file by running the __spell_db.py__ file:

@@ -38,7 +38,8 @@ pip install requests beautifulsoup4 lxml pyyaml
 python scrapping/scrap-spells.py
 ```
 
-4. This command will generate a file __spells.yaml__ with all spells and their attributes. The file should be found in the `outputs` directory. 
+4. This command will generate a file __spells.yaml__ with all spells and their attributes. The file should be found in the `outputs` directory.  
+
 _A progress bar should be displayed in your terminal while scrapping, showing the time left and the number of spells scraped. The script should takes about 20 minutes to scrap all spells._
 
 ### Database
@@ -47,4 +48,4 @@ _A progress bar should be displayed in your terminal while scrapping, showing th
 python database/spell-db.py
 ```
 
-6. The script will create a __spells.db__ file with a spell table containing all the spell information.
+6. The script will generate a __spells.db__ file with a spell table containing all the spell information. This file should also be found in the `outputs` directory.

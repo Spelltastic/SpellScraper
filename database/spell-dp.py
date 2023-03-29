@@ -41,7 +41,7 @@ def insertSpells():
         duration = spell.get('duration')
         saving_throw = spell.get('saving_throw')
         spell_resistance = spell.get('spell_resistance')
-        description = '\n'.join(spell.get('description', []))
+        description = spell.get('description')
         components = spell.get('components')
         area = spell.get('area')
         effect = spell.get('effect')

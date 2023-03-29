@@ -44,8 +44,7 @@ def getStringSiblings(array, content, stop):
     return ' '.join(array)
 
 spellz = {}
-# pbar = tqdm(total=2650, desc="[Processing]", unit=" spell")
-cpt = 0
+pbar = tqdm(total=2650, desc="[Processing]", unit=" spell")
 
 for li in lis: # now we loop over all spells, get the page link and scrap all attributes
     url = li.a['href']
@@ -137,8 +136,11 @@ for li in lis: # now we loop over all spells, get the page link and scrap all at
 
     # get description 
     description = spellContent.find('p', string='DESCRIPTION')
-    if(description):
+    if description is None:
+        description = spellContent.find_next_sibling()
+    else:
         next_elem = description.find_next_sibling()
+
     html = ''
     while next_elem and not (next_elem.name == 'div' and 'section15' in next_elem.get('class', [])):
         html += str(next_elem)
@@ -179,7 +181,7 @@ for li in lis: # now we loop over all spells, get the page link and scrap all at
 with open('outputs/spells.yaml', 'w') as f:
     yaml.dump(spellz, f)
 
-# pbar.close() 
+pbar.close() 
 
     
 

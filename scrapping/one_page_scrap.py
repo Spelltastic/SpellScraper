@@ -11,17 +11,21 @@ from lxml import html
 
 # URL = "https://www.d20pfsrd.com/magic/all-spells/m/magic-circle-against-evil/"
 # URL = "https://www.d20pfsrd.com/magic/all-spells/p/prophetic-lore/"
-URL = "https://www.d20pfsrd.com/magic/all-spells/t/time-stop/"
+URL = "https://www.d20pfsrd.com/magic/all-spells/d/death-from-below/"
 
 responseDetails = requests.get(URL)
 spellSoup = BeautifulSoup(responseDetails.content, 'lxml')
 spellContent = spellSoup.find(id='article-content')
 
 description = spellContent.find('p', string='DESCRIPTION')
+if description is None:
+    description = spellContent.find_next_sibling()
 
-next_elem = description.find_next_sibling()
-html = ''
+next_elem = description.find_next('p')
+html= ''
 while next_elem and not (next_elem.name == 'div' and 'section15' in next_elem.get('class', [])):
+    print("ne;", next_elem )
+    print()
     html += str(next_elem)
     next_elem = next_elem.find_next_sibling()
 

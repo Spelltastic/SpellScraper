@@ -44,7 +44,8 @@ def getStringSiblings(array, content, stop):
     return ' '.join(array)
 
 spellz = {}
-pbar = tqdm(total=2650, desc="[Processing]", unit=" spell")
+# pbar = tqdm(total=2650, desc="[Processing]", unit=" spell")
+cpt = 0
 
 for li in lis: # now we loop over all spells, get the page link and scrap all attributes
     url = li.a['href']
@@ -55,7 +56,7 @@ for li in lis: # now we loop over all spells, get the page link and scrap all at
 
     # get article content which contains all info about the spell
     spellContent = spellSoup.find(id='article-content')
-    pbar.update(1)
+    # pbar.update(1)
 
 ###################
 ### ATTRIBUTES
@@ -67,7 +68,7 @@ for li in lis: # now we loop over all spells, get the page link and scrap all at
     else :
         spell_name = None
         continue
-    # print("name: ",spell_name)
+    print("name: ",spell_name)
 
     # get school and level
     school_levels = spellContent.find('b',string="School").find_previous('p')
@@ -135,23 +136,29 @@ for li in lis: # now we loop over all spells, get the page link and scrap all at
     # print('Effect: ',spell_effect)
 
     # get description 
-    spell_paragraphs = []
-    spell_description = spellContent.find('p',string='DESCRIPTION')
-    if not spell_description:
-        spell_description = spellSoup.find('div', {'class': 'page-center'}).find('p',string='DESCRIPTION')
-    if not spell_description:
-        spell_description = None
-        continue
-    spell_description = spell_description.find_next('p')
+    description = spellContent.find('p', string='DESCRIPTION')
+    if(description):
+        next_elem = description.find_next_sibling()
+    html = ''
+    while next_elem and not (next_elem.name == 'div' and 'section15' in next_elem.get('class', [])):
+        html += str(next_elem)
+        next_elem = next_elem.find_next_sibling()
 
-    while spell_description and not spell_description.find_previous('div', {'class': 'section15'}):
-        if spell_description.has_attr('class'):
-            spell_paragraphs.append(spell_description.text)
-        else:
-            spell_paragraphs.append(spell_description.text)
-        spell_description = spell_description.find_next('p')
-        if spell_description and spell_description.parent.name == 'div':
-            break
+    # Convert HTML string to regular string
+    htmlString = str(html)
+
+    if "<h4" in htmlString:
+        # Trim HTML string
+        htmlString = htmlString.split("<h4")[0]
+
+    if "</p><div>" in htmlString:
+        last_p_index = htmlString.rfind("</p>")
+
+        if last_p_index != -1:
+            htmlString = htmlString[:last_p_index + 4]
+
+    # Convert back to BeautifulSoup object
+    spell_paragraphs = htmlString
 
     # add all attributes to a spell dictionnary
     spellz[spell_name] = {
@@ -172,7 +179,7 @@ for li in lis: # now we loop over all spells, get the page link and scrap all at
 with open('outputs/spells.yaml', 'w') as f:
     yaml.dump(spellz, f)
 
-pbar.close() 
+# pbar.close() 
 
     
 
